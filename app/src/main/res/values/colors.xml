@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#A7228E</color>
+    <color name="colorPrimaryDark">#861a72</color>
+    <color name="colorAccent">#83C54C</color>
+
+    <color name="stay_color">#838383</color>
+    <color name="background_color">#FFEDEDED</color>
+    <color name="card_back">#3f999999</color>
+    <color name="text_orange">#FF941F</color>
+    <color name="gray_light">#a2e6e6e6</color>
+    <color name="red">#c13f3f</color>
+    <color name="wight_meduim">#f5f5f5</color>
+    <color name="special_color">#FFD5D6CE</color>
+    <color name="select_categ">#EFF1F3</color>
+</resources>
