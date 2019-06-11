@@ -90,7 +90,7 @@ public class AddressActivity extends BaseActitvty implements AddressInterface {
     public void onSuccess(AddressModel addressModel) {
         addressList.clear();
         if (addressList != null)
-            addressList.addAll(addressModel.getData());
+//            addressList.addAll(addressModel.getData());
         addressAdapter.notifyDataSetChanged();
     }
 

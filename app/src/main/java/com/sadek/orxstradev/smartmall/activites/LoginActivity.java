@@ -22,6 +22,8 @@ import com.sadek.orxstradev.smartmall.R;
 import com.sadek.orxstradev.smartmall.dialogs.LanguageDialog;
 import com.sadek.orxstradev.smartmall.interfaces.LoginInterface;
 import com.sadek.orxstradev.smartmall.model.body.LoginBody;
+import com.sadek.orxstradev.smartmall.model.body.SignupBody;
+import com.sadek.orxstradev.smartmall.model.body.SocialLoginBody;
 import com.sadek.orxstradev.smartmall.model.response.LoginResponse;
 import com.sadek.orxstradev.smartmall.presenters.LoginPresenter;
 import com.sadek.orxstradev.smartmall.utils.Common;
@@ -136,6 +138,7 @@ public class LoginActivity extends BaseActitvty implements LoginInterface {
             //show toast
             Toast.makeText(this, "Google Sign In Successful.", Toast.LENGTH_SHORT).show();
 
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -169,7 +172,8 @@ public class LoginActivity extends BaseActitvty implements LoginInterface {
 
             //user profile pic
             Uri personPhoto = acct.getPhotoUrl();
-
+            SignupBody signupBody = new SignupBody(personName,"",personEmail);
+            _LoginPresenter.loginSocial(signupBody);
             //show the user details
 //            userDetailLabel.setText("ID : " + personId + "\nDisplay Name : " + personName + "\nFull Name : " + personGivenName + " " + personFamilyName + "\nEmail : " + personEmail);
 
@@ -191,6 +195,22 @@ public class LoginActivity extends BaseActitvty implements LoginInterface {
         if (loginResponse.getStatus().equals("true")) {
             Toast.makeText(getBaseContext(), getString(R.string.welcome), Toast.LENGTH_LONG).show();
             Paper.book().write(Common.token, loginResponse.getData().get(0).getId() + "");
+            Common.CURRENT_USSER = Paper.book().read(Common.token);
+            Intent ordersIntent = new Intent(this, HomeActivity.class);
+            ordersIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(ordersIntent);
+            finish();
+        } else {
+            Toast.makeText(getBaseContext(), loginResponse.getMessage() + "", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onLoginSuccess(SocialLoginBody loginResponse) {
+        if (loginResponse.getId()+"" != null) {
+            Toast.makeText(getBaseContext(), getString(R.string.welcome), Toast.LENGTH_LONG).show();
+            Paper.book().write(Common.token, loginResponse.getId() + "");
+            Paper.book().write(Common.api_token, loginResponse.getApiToken() + "");
             Common.CURRENT_USSER = Paper.book().read(Common.token);
             Intent ordersIntent = new Intent(this, HomeActivity.class);
             ordersIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

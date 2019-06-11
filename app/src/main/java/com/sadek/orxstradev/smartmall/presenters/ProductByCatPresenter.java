@@ -38,12 +38,14 @@ public class ProductByCatPresenter {
     }
 
     public void getProduct(final int postion, final HomeCategoryAdapter.OrdersVh holder, int parent) {
-        String lang= "ar";
+        String lang= "ar";int userId = 0;
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
         productByCatInterface.onProgressDialog(true);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductByCatIdResponse(parent,lang);
+        Call<ProductApiResponse> call = apiInterface.getProductByCatIdResponse(parent,userId,lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
@@ -67,12 +69,14 @@ public class ProductByCatPresenter {
     }
 
     public void getProductById(final int postion, final CartAdapter.OrdersVh holder, int parent) {
-        String lang= "ar";
+        String lang= "ar";int userId = 0;
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
         productByCatInterface.onProgressDialog(true);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductByIdResponse(parent,lang);
+        Call<ProductApiResponse> call = apiInterface.getProductByIdResponse(parent,userId,lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
@@ -95,12 +99,14 @@ public class ProductByCatPresenter {
         });
     }
     public void getProductById(final int postion, final CheckOutAdapter.OrdersVh holder, int parent) {
-        String lang= "ar";
+        String lang= "ar";int userId = 0;
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
         productByCatInterface.onProgressDialog(true);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductByIdResponse(parent,lang);
+        Call<ProductApiResponse> call = apiInterface.getProductByIdResponse(parent,userId,lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
@@ -123,12 +129,14 @@ public class ProductByCatPresenter {
         });
     }
     public void getProductFavById(final int postion, final FavoriteAdapter.ViewHolder holder, int parent) {
-        String lang= "ar";
+        String lang= "ar";int userId = 0;
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
         productByCatInterface.onProgressDialog(true);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductByIdResponse(parent,lang);
+        Call<ProductApiResponse> call = apiInterface.getProductByIdResponse(parent,userId,lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {

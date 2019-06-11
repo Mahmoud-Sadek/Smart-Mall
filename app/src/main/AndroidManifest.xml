@@ -28,6 +28,7 @@
         <activity android:name=".activites.CheckOutActivity" />
         <activity android:name=".activites.AddAddressActivity" />
         <activity android:name=".activites.MainActivity" />
+        <activity android:name=".activites.WebViewActivity" />
         <activity android:name=".activites.CartActivity" />
         <activity android:name=".activites.SignupActivity" />
         <activity android:name=".activites.HomeActivity" />

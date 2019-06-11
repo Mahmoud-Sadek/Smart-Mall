@@ -57,6 +57,7 @@ public class CategorySubItemAdapter extends RecyclerView.Adapter<CategorySubItem
                 Intent intent = new Intent(context, ProductListActivity.class);
                 // we will send food id to food detail class
                 intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

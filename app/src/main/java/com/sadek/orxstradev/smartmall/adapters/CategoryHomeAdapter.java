@@ -45,13 +45,16 @@ public class CategoryHomeAdapter extends RecyclerView.Adapter<CategoryHomeAdapte
         if (position % 2 == 0)
             holder.category_image.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#A7228E")));
         else holder.category_image.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#83C54C")));
+
+        Picasso.with(context).load(Common.BASE_IMAGE_URL+categoryList.get(position).getMobileIcon()).error(R.drawable.logo).into(holder.category_image);
+
         holder.category_txt.setText(categoryList.get(position).getTitle());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(Common.CategoryId, categoryList.get(position).getId());
-                bundle.putString(Common.CategoryImage, categoryList.get(position).getImage());
+                bundle.putString(Common.CategoryImage, categoryList.get(position).getMobileIcon());
                 bundle.putString(Common.CategoryName, categoryList.get(position).getTitle());
                 Intent intent = new Intent(context, CategorySubActivity.class);
                 // we will send food id to food detail class

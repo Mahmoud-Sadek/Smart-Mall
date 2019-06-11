@@ -24,6 +24,21 @@
                 android:orientation="vertical">
 
                 <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/first_name"
+                    android:padding="5dp"
+                    app:met_floatingLabel="highlight" />
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/last_name"
+                    android:padding="5dp"
+                    app:met_floatingLabel="highlight" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,6 +61,13 @@
                     android:hint="@string/city"
                     android:padding="5dp"
                     app:met_floatingLabel="highlight" />
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/district"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/district"
+                    android:padding="5dp"
+                    app:met_floatingLabel="highlight" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/street"
@@ -53,6 +75,14 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/street"
                     android:padding="5dp"
+                    app:met_floatingLabel="highlight" />
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/postal_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/postal_code"
+                    android:padding="5dp"
+                    android:inputType="number"
                     app:met_floatingLabel="highlight" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -96,6 +126,28 @@
                     android:hint="@string/note"
                     app:met_floatingLabel="highlight"
                     android:padding="5dp" />
+
+                <RadioGroup
+                    android:id="@+id/location_type_RB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/homeRB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home"
+                        android:textColor="@color/colorPrimary" />
+
+                    <RadioButton
+                        android:id="@+id/workRB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/work"
+                        android:textColor="@color/colorPrimary" />
+                </RadioGroup>
 
                 <info.hoang8f.widget.FButton
                     android:id="@+id/btn_add_address"

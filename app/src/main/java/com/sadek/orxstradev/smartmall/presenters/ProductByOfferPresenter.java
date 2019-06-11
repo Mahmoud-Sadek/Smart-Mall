@@ -34,12 +34,12 @@ public class ProductByOfferPresenter {
     }
 
     public void getProduct(final int postion, final HomeCategoryAdapter.OrdersVh holder, int parent) {
-        String lang= "ar";
+        String lang = "ar";
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
         productByCatInterface.onProgressDialog(true);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductByOfferIdResponse(parent,lang);
+        Call<ProductApiResponse> call = apiInterface.getProductByOfferIdResponse(parent, 0, lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
@@ -61,13 +61,16 @@ public class ProductByOfferPresenter {
             }
         });
     }
+
     public void getProductOffer(final int postion, final ExploreOfferAdapter.OrdersVh holder, int parent) {
-        String lang= "ar";
+        String lang = "ar";
+        int userId = 0;
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
-        productByCatInterface.onProgressDialog(true);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductByOfferIdResponse(parent,lang);
+        Call<ProductApiResponse> call = apiInterface.getProductByOfferIdResponse(parent, userId, lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
@@ -84,7 +87,7 @@ public class ProductByOfferPresenter {
             public void onFailure(Call<ProductApiResponse> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
-                productByCatInterface.onFailure(_Context.getString(R.string.error) + " " );
+                productByCatInterface.onFailure(_Context.getString(R.string.error) + " ");
                 productByCatInterface.onProgressDialog(false);
             }
         });

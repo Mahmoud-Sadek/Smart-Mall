@@ -18,6 +18,7 @@ import com.sadek.orxstradev.smartmall.activites.FavoriteListActivity;
 import com.sadek.orxstradev.smartmall.activites.LoginActivity;
 import com.sadek.orxstradev.smartmall.activites.MessageActivity;
 import com.sadek.orxstradev.smartmall.activites.ProfileSettingActivity;
+import com.sadek.orxstradev.smartmall.activites.WebViewActivity;
 import com.sadek.orxstradev.smartmall.interfaces.ProfileInterface;
 import com.sadek.orxstradev.smartmall.model.body.ProfileBody;
 import com.sadek.orxstradev.smartmall.model.response.ProfileResponse;
@@ -75,6 +76,24 @@ public class ProfileFragment extends Fragment implements ProfileInterface {
         if (Paper.book().read(Common.token) == null) {
             getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
         }
+    }
+    @OnClick(R.id.profile_FAQ_btn)
+    public void onprofile_FAQ_btnClick(View view) {
+        Intent urlIntent = new Intent(getActivity(),WebViewActivity.class);
+        urlIntent.putExtra("url","http://smartmall-sa.com/faq");
+        startActivity(urlIntent);
+    }
+    @OnClick(R.id.profile_contact_btn)
+    public void onprofile_contact_btnClick(View view) {
+        Intent urlIntent = new Intent(getActivity(),WebViewActivity.class);
+        urlIntent.putExtra("url","http://smartmall-sa.com/contactus");
+        startActivity(urlIntent);
+    }
+    @OnClick(R.id.profile_support_btn)
+    public void onprofile_support_btnClick(View view) {
+        Intent urlIntent = new Intent(getActivity(),WebViewActivity.class);
+        urlIntent.putExtra("url","http://smartmall-sa.com/aboutsmart");
+        startActivity(urlIntent);
     }
 
     @Override

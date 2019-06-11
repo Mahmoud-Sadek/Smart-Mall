@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ReviewsResponse {
+public  class ReviewsResponse {
 
     @Expose
     @SerializedName("message")
@@ -40,11 +40,16 @@ public class ReviewsResponse {
     public void setData(List<DataEntity> data) {
         this.data = data;
     }
-
     public class DataEntity {
         @Expose
-        @SerializedName("time")
-        private String time;
+        @SerializedName("updated_at")
+        private String updatedAt;
+        @Expose
+        @SerializedName("created_at")
+        private String createdAt;
+        @Expose
+        @SerializedName("rating")
+        private String rating;
         @Expose
         @SerializedName("product_id")
         private String productId;
@@ -58,12 +63,28 @@ public class ReviewsResponse {
         @SerializedName("id")
         private int id;
 
-        public String getTime() {
-            return time;
+        public String getUpdatedAt() {
+            return updatedAt;
         }
 
-        public void setTime(String time) {
-            this.time = time;
+        public void setUpdatedAt(String updatedAt) {
+            this.updatedAt = updatedAt;
+        }
+
+        public String getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public String getRating() {
+            return rating;
+        }
+
+        public void setRating(String rating) {
+            this.rating = rating;
         }
 
         public String getProductId() {

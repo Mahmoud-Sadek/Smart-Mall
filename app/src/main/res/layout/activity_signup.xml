@@ -106,17 +106,11 @@
                 android:textSize="20sp" />
         </FrameLayout>
 
-        <Button
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/default_google_sign_in_button"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:background="@android:color/transparent"
-            android:drawableStart="@drawable/google_icon"
-            android:drawablePadding="14dp"
-            android:text="@string/signingogle"
-            android:textAllCaps="false"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="20sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:buttonSize="wide" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

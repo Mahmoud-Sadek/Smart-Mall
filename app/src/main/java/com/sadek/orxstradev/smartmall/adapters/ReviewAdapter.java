@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 
@@ -59,10 +60,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.detailTV.setText(contents.get(position).getText());
-        holder.nameTV.setText(contents.get(position).getUserId());
+        holder.nameTV.setText(contents.get(position).getCreatedAt());
+        holder.ratingbar.setRating(Float.parseFloat(contents.get(position).getRating()));
 
         //todo here to get the profile of the user
-
 
     }
 
@@ -72,6 +73,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         TextView nameTV;
         @BindView(R.id.detailTV)
         TextView detailTV;
+        @BindView(R.id.ratingbar)
+        RatingBar ratingbar;
 
         ViewHolder(View view) {
             super(view);

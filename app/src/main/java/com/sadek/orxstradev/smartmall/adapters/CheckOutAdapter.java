@@ -92,7 +92,7 @@ public class CheckOutAdapter extends RecyclerView.Adapter<CheckOutAdapter.Orders
         if (productApiResponse.getData().size() != 0) {
             holder.cart_name_txt.setText(productApiResponse.getData().get(0).getName() + "");
             holder.cart_price_txt.setText(productApiResponse.getData().get(0).getPrice() + " $");
-            Picasso.with(context).load(Common.BASE_IMAGE_URL+productApiResponse.getData().get(0).getImage1()).error(R.drawable.logo).into(holder.cart_img);
+            Picasso.with(context).load(Common.BASE_IMAGE_URL+productApiResponse.getData().get(0).getImage1().get(0)).error(R.drawable.logo).into(holder.cart_img);
         }
     }
 

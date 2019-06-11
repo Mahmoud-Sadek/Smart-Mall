@@ -23,6 +23,7 @@ import com.sadek.orxstradev.smartmall.adapters.CheckOutAdapter;
 import com.sadek.orxstradev.smartmall.adapters.ExploreOfferAdapter;
 import com.sadek.orxstradev.smartmall.adapters.FavoriteAdapter;
 import com.sadek.orxstradev.smartmall.adapters.HomeCategoryAdapter;
+import com.sadek.orxstradev.smartmall.adapters.OptionAdapter;
 import com.sadek.orxstradev.smartmall.adapters.ProductHomeAdapter;
 import com.sadek.orxstradev.smartmall.adapters.ProductImagesAdapter;
 import com.sadek.orxstradev.smartmall.adapters.ReviewAdapter;
@@ -32,6 +33,7 @@ import com.sadek.orxstradev.smartmall.interfaces.ProductByCatInterface;
 import com.sadek.orxstradev.smartmall.interfaces.ReviewInterface;
 import com.sadek.orxstradev.smartmall.model.body.AddCartBody;
 import com.sadek.orxstradev.smartmall.model.body.AddFavoriteBody;
+import com.sadek.orxstradev.smartmall.model.body.OptionModel;
 import com.sadek.orxstradev.smartmall.model.body.ReviewBody;
 import com.sadek.orxstradev.smartmall.model.response.CartModel;
 import com.sadek.orxstradev.smartmall.model.response.DateResponse;
@@ -90,6 +92,30 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
     ImageView likeBtn;
 
 
+    @BindView(R.id.product_detail_color_recycler)
+    RecyclerView product_detail_color_recycler;
+    @BindView(R.id.product_detail_size_recycler)
+    RecyclerView product_detail_size_recycler;
+    @BindView(R.id.product_detail_volume_recycler)
+    RecyclerView product_detail_volume_recycler;
+
+    @BindView(R.id.product_detail_color_layout)
+    View product_detail_color_layout;
+    @BindView(R.id.product_detail_size_layout)
+    View product_detail_size_layout;
+    @BindView(R.id.product_detail_volume_layout)
+    View product_detail_volume_layout;
+
+
+    OptionAdapter colorOptionAdapter;
+    List<OptionModel> colorOptionModelList;
+
+    OptionAdapter sizeOptionAdapter;
+    List<OptionModel> sizeOptionModelList;
+
+    OptionAdapter rulerOptionAdapter;
+    List<OptionModel> rulerOptionModelList;
+
     //the images
     ProductImagesAdapter adapterImages;
     ArrayList<String> dataImages = new ArrayList<>();
@@ -133,8 +159,8 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
         reviewPresenter = new ReviewPresenter(this, this);
         initUI();
 
-        if (product.getSku() != null)
-            productBySKUPresenter.getProduct(Integer.parseInt(product.getSku() + ""));
+        if (product.getCategoryId() != null)
+            productBySKUPresenter.getProduct(Integer.parseInt(product.getCategoryId() + ""));
         reviewPresenter.getReview(product.getId());
 
     }
@@ -180,7 +206,7 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
         brandTV.setText(product.getBrandId() + "");
         nameTV.setText(product.getName() + "");
         priceTV.setText(product.getPrice() + " " + getString(R.string.currency));
-        if (product.getDiscount() == null)
+        if (product.getDiscount() + "" == null)
             discountTV.setVisibility(View.GONE);
         else
             discountTV.setText(getString(R.string.discount) + " " + product.getDiscount() + " ٪ ");
@@ -190,23 +216,60 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
         informationTV.setText(product.getInfromation() + "");
 
         if (product.getLikes() == null)
-            likeTxt.setText("0");
-        else
-            likeTxt.setText(product.getLikes() + "");
+            product.setLikes("0");
+
+        likeTxt.setText(product.getLikes() + "");
+        if (product.getIsLike()) {
+            likeBtn.setImageResource(R.drawable.ic_favorite_black_24dp);
+            likeBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A7228E")));
+        } else {
+            likeBtn.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            likeBtn.setImageTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.darker_gray)));
+        }
 
         List<String> imageList = new ArrayList<>();
         if (product.getImage1() != null)
-            imageList.add(product.getImage1());
-        if (product.getImage2() != null)
-            imageList.add(product.getImage2());
-        if (product.getImage3() != null)
-            imageList.add(product.getImage3());
-        if (product.getImage4() != null)
-            imageList.add(product.getImage4());
-        if (product.getImage5() != null)
-            imageList.add(product.getImage5());
+            imageList.addAll(product.getImage1());
         dataImages.addAll(imageList);
         adapterImages.notifyDataSetChanged();
+
+
+
+        colorOptionModelList = new ArrayList<>();
+        sizeOptionModelList = new ArrayList<>();
+        rulerOptionModelList = new ArrayList<>();
+        if (product.getColors()!=null){
+            product_detail_color_layout.setVisibility(View.VISIBLE);
+            colorOptionModelList = product.getColors();
+        }
+        if (product.getSize()!=null){
+            product_detail_size_layout.setVisibility(View.VISIBLE);
+            sizeOptionModelList = product.getSize();
+        }
+        if (product.getVolume()!=null){
+            product_detail_volume_layout.setVisibility(View.VISIBLE);
+            rulerOptionModelList = product.getVolume();
+        }
+
+        //product_detail_color_recycler
+        final RecyclerView.LayoutManager mLayoutManager_detail_color = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
+        product_detail_color_recycler.setLayoutManager(mLayoutManager_detail_color);
+        colorOptionAdapter = new OptionAdapter(colorOptionModelList, getBaseContext());
+        product_detail_color_recycler.setAdapter(colorOptionAdapter);
+
+
+        //product_detail_size_recycler
+        final RecyclerView.LayoutManager mLayoutManager_detail_size = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
+        product_detail_size_recycler.setLayoutManager(mLayoutManager_detail_size);
+        sizeOptionAdapter = new OptionAdapter(sizeOptionModelList, getBaseContext());
+        product_detail_size_recycler.setAdapter(sizeOptionAdapter);
+
+
+        //product_detail_ruler_recycler
+        final RecyclerView.LayoutManager mLayoutManager_detail_ruler = new LinearLayoutManager(getBaseContext(), LinearLayoutManager.HORIZONTAL, false);
+        product_detail_volume_recycler.setLayoutManager(mLayoutManager_detail_ruler);
+        rulerOptionAdapter = new OptionAdapter(rulerOptionModelList, getBaseContext());
+        product_detail_volume_recycler.setAdapter(rulerOptionAdapter);
 
     }
 
@@ -221,7 +284,7 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
     void shareImage() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        String shareBody = product.getName();
+        String shareBody = "http://smartmall-sa.com/pro_details" + product.getId();
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
                 product.getLinks());
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
@@ -270,8 +333,22 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
     void addLikeBtn() {
         if (Paper.book().read(Common.token) != null) {
             addFavoritePresenter.addFavorite(new AddFavoriteBody(Paper.book().read(Common.token) + "", product.getId() + ""));
-            likeBtn.setImageResource(R.drawable.ic_favorite_black_24dp);
-            likeBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A7228E")));
+
+            if (product.getIsLike())
+                product.setLikes(new Integer(product.getLikes()) - 1 + "");
+            else
+                product.setLikes(new Integer(product.getLikes()) + 1 + "");
+
+            likeTxt.setText(product.getLikes() + " ");
+
+            product.setIsLike(!product.getIsLike());
+            if (product.getIsLike()) {
+                likeBtn.setImageResource(R.drawable.ic_favorite_black_24dp);
+                likeBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A7228E")));
+            } else {
+                likeBtn.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                likeBtn.setImageTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.darker_gray)));
+            }
         } else {
             Toast.makeText(this, getString(R.string.you_are_not_login), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
@@ -321,10 +398,7 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
 
     @Override
     public void onProductByOfferSuccess(ProductApiResponse productApiResponse, ExploreOfferAdapter.OrdersVh holder, int postion) {
-        productList.clear();
-        if (productList != null)
-            productList.addAll(productApiResponse.getData());
-        adapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -334,7 +408,10 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
 
     @Override
     public void onProductSuccess(ProductApiResponse productApiResponse) {
-
+        productList.clear();
+        if (productList != null)
+            productList.addAll(productApiResponse.getData());
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -366,7 +443,7 @@ public class ProductDetailActivity extends BaseActitvty implements AddFavoriteIn
 
     @Override
     public void onPositiveButtonClicked(int value, String comments) {
-        ReviewBody reviewBody = new ReviewBody(Paper.book().read(Common.token) + "", comments, product.getId() + "");
+        ReviewBody reviewBody = new ReviewBody(Paper.book().read(Common.token) + "", comments,comments,value+"", product.getId() + "");
         addReviewPresenter.addFavorite(reviewBody);
     }
 

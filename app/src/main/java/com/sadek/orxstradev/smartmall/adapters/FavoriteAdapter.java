@@ -76,8 +76,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         holder.likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (Paper.book().read(Common.token) != null) {
-                    addFavoritePresenter.removeFavorite(new AddFavoriteBody(Paper.book().read(Common.token) + "", data.get(position).getId() + ""));
+                    addFavoritePresenter.addFavorite(new AddFavoriteBody(Paper.book().read(Common.token) + "", data.get(position).getId() + ""));
                     holder.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     holder.likeBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#838383")));
                 } else {
@@ -122,33 +123,41 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     @Override
     public void onProductByCatSuccess(final ProductApiResponse productApiResponse, ViewHolder holder, final int position) {
         if (context != null)
-            Picasso.with(context).load(Common.BASE_IMAGE_URL+productApiResponse.getData().get(0).getImage1()).into(holder.productIV);
+            if (productApiResponse.getData() != null) {
 
-        holder.nameTV.setText(productApiResponse.getData().get(0).getName());
-        holder.discountTV.setText(productApiResponse.getData().get(0).getPrice() + " " + context.getString(R.string.currency));
-        holder.priceTV.setText(" " + productApiResponse.getData().get(0).getOfferPrice() + context.getString(R.string.currency));
-        holder.discountTV.setPaintFlags(holder.discountTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        if (productApiResponse.getData().get(0).getLikes() == null)
-            holder.category_product_likes_txt.setText("0 ");
-        else
-            holder.category_product_likes_txt.setText(productApiResponse.getData().get(0).getLikes() + " ");
+                Picasso.with(context).load(Common.BASE_IMAGE_URL + productApiResponse.getData().get(0).getImage1().get(0)).into(holder.productIV);
 
-        if (productApiResponse.getData().get(0).getDiscount() == null) {
-            holder.discount_view.setVisibility(View.GONE);
-        }
-        holder.discountamountTV.setText(productApiResponse.getData().get(0).getDiscount() + "%");
+                holder.nameTV.setText(productApiResponse.getData().get(0).getName());
+                holder.discountTV.setText(productApiResponse.getData().get(0).getPrice() + " " + context.getString(R.string.currency));
+                holder.priceTV.setText(" " + productApiResponse.getData().get(0).getOfferPrice() + context.getString(R.string.currency));
+                holder.discountTV.setPaintFlags(holder.discountTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                if (productApiResponse.getData().get(0).getLikes() == null)
+                    holder.category_product_likes_txt.setText("0 ");
+                else
+                    holder.category_product_likes_txt.setText(productApiResponse.getData().get(0).getLikes() + " ");
+
+                if (productApiResponse.getData().get(0).getDiscount() + "" == null) {
+                    holder.discount_view.setVisibility(View.GONE);
+                }
+                holder.discountamountTV.setText(productApiResponse.getData().get(0).getDiscount() + "%");
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProductDetailActivity.product = productApiResponse.getData().get(0);
-                Intent intent = new Intent(context, ProductDetailActivity.class);
-                // we will send food id to food detail class
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ProductDetailActivity.product = productApiResponse.getData().get(0);
+                        Intent intent = new Intent(context, ProductDetailActivity.class);
+                        // we will send food id to food detail class
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                });
+            } else {
+                if (position < data.size()) {
+                    data.remove(position);
+                    notifyDataSetChanged();
+                }
             }
-        });
     }
 
     @Override

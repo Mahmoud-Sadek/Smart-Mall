@@ -28,7 +28,7 @@ public class EditProfileDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if(reviewInput.getText().toString().isEmpty()){
-                    reviewInput.setError(context.getString(R.string.reviewisrquerd));
+                    reviewInput.setError(context.getString(R.string.error));
                 }else {
                     useCouponAction.onGetCouponCode(reviewInput.getText().toString());
                 }

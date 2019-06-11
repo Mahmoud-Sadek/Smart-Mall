@@ -20,7 +20,6 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.sadek.orxstradev.smartmall.R;
 import com.sadek.orxstradev.smartmall.activites.ProductDetailActivity;
 import com.sadek.orxstradev.smartmall.interfaces.AddFavoriteInterface;
-import com.sadek.orxstradev.smartmall.model.body.AddCartBody;
 import com.sadek.orxstradev.smartmall.model.body.AddFavoriteBody;
 import com.sadek.orxstradev.smartmall.model.response.DateResponse;
 import com.sadek.orxstradev.smartmall.model.response.ProductApiResponse;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import io.paperdb.Paper;
 
 public class ProductHomeAdapter extends RecyclerView.Adapter<ProductHomeAdapter.ViewHolder> implements
@@ -69,19 +67,21 @@ public class ProductHomeAdapter extends RecyclerView.Adapter<ProductHomeAdapter.
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         if (context != null)
-            Picasso.with(context).load(Common.BASE_IMAGE_URL+data.get(position).getImage1()).into(holder.productIV);
+            Picasso.with(context).load(Common.BASE_IMAGE_URL2 + data.get(position).getImage1().get(0)).into(holder.productIV);
 
         holder.nameTV.setText(data.get(position).getName());
         holder.discountTV.setText(data.get(position).getPrice() + " " + context.getString(R.string.currency));
-        holder.priceTV.setText( " " + data.get(position).getOfferPrice() + context.getString(R.string.currency));
+        holder.priceTV.setText(" " + data.get(position).getOfferPrice() + context.getString(R.string.currency));
         holder.discountTV.setPaintFlags(holder.discountTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        if (data.get(position).getLikes() == null)
+        if (data.get(position).getLikes() == null) {
             holder.category_product_likes_txt.setText("0 ");
+            data.get(position).setLikes("0");
+        }
         else
             holder.category_product_likes_txt.setText(data.get(position).getLikes() + " ");
 
-        holder.discountamountTV.setText(data.get(position).getDiscount() + "%" );
-        if (data.get(position).getDiscount()==null){
+        holder.discountamountTV.setText(data.get(position).getDiscount() + "%");
+        if (data.get(position).getDiscount() + "" == null) {
             holder.discount_view.setVisibility(View.GONE);
         }
 
@@ -97,15 +97,35 @@ public class ProductHomeAdapter extends RecyclerView.Adapter<ProductHomeAdapter.
             }
         });
 
+        if (data.get(position).getIsLike()) {
+            holder.likeBtn.setImageResource(R.drawable.ic_favorite_black_24dp);
+            holder.likeBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A7228E")));
+        }
 
-       holder.likeBtn.setOnClickListener(new View.OnClickListener() {
+        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Paper.book().read(Common.token) != null) {
                     addFavoritePresenter.addFavorite(new AddFavoriteBody(Paper.book().read(Common.token) + "", data.get(position).getId() + ""));
-                    holder.likeBtn.setImageResource(R.drawable.ic_favorite_black_24dp);
-                    holder.likeBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A7228E")));
-                }else {
+
+
+                    if (data.get(position).getIsLike())
+                        data.get(position).setLikes(new Integer(data.get(position).getLikes()) - 1 + "");
+                    else
+                        data.get(position).setLikes(new Integer(data.get(position).getLikes()) + 1 + "");
+
+                    holder.category_product_likes_txt.setText(data.get(position).getLikes() + " ");
+
+                    data.get(position).setIsLike(!data.get(position).getIsLike());
+                    if (data.get(position).getIsLike()) {
+                        holder.likeBtn.setImageResource(R.drawable.ic_favorite_black_24dp);
+                        holder.likeBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A7228E")));
+
+                    } else {
+                        holder.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                        holder.likeBtn.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(android.R.color.darker_gray)));
+                    }
+                } else {
                     Toast.makeText(context, context.getString(R.string.you_are_not_login), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -142,7 +162,7 @@ public class ProductHomeAdapter extends RecyclerView.Adapter<ProductHomeAdapter.
                     dialog.show();
                 else dialog.dismiss();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
@@ -156,7 +176,7 @@ public class ProductHomeAdapter extends RecyclerView.Adapter<ProductHomeAdapter.
 
         @BindView(R.id.category_product_img)
         ImageView productIV;
-//        @BindView(R.id.brandTV)
+        //        @BindView(R.id.brandTV)
 //        TextView brandTV;
         @BindView(R.id.category_product_name_txt)
         TextView nameTV;
@@ -172,7 +192,6 @@ public class ProductHomeAdapter extends RecyclerView.Adapter<ProductHomeAdapter.
         View discount_view;
         @BindView(R.id.likeBtn)
         ImageView likeBtn;
-
 
 
         public ViewHolder(@NonNull View itemView) {

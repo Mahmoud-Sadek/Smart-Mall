@@ -8,6 +8,7 @@ import com.sadek.orxstradev.smartmall.adapters.HomeCategoryAdapter;
 import com.sadek.orxstradev.smartmall.interfaces.ProductByCatInterface;
 import com.sadek.orxstradev.smartmall.model.body.AddFavoriteBody;
 import com.sadek.orxstradev.smartmall.model.response.CartModel;
+import com.sadek.orxstradev.smartmall.model.response.OfferApiResponse;
 import com.sadek.orxstradev.smartmall.model.response.ProductApiResponse;
 import com.sadek.orxstradev.smartmall.service.ApiService;
 import com.sadek.orxstradev.smartmall.utils.Common;
@@ -35,12 +36,14 @@ public class ProductPresenter {
     }
 
     public void getProduct() {
-        String lang= "ar";
+        String lang= "ar";int userId = 0;
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
         productByCatInterface.onProgressDialog(true);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductApiResponse(lang);
+        Call<ProductApiResponse> call = apiInterface.getProductApiResponse(userId+"",lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
@@ -62,6 +65,68 @@ public class ProductPresenter {
             }
         });
     }
+
+    public void getFlashSale() {
+        String lang= "ar";
+        if (Paper.book().contains(Common.language))
+            lang = Paper.book().read(Common.language);
+        productByCatInterface.onProgressDialog(true);
+        ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
+        Call<OfferApiResponse> call = apiInterface.getFlashSaleApiResponse(lang);
+        call.enqueue(new Callback<OfferApiResponse>() {
+            @Override
+            public void onResponse(Call<OfferApiResponse> call, Response<OfferApiResponse> response) {
+                if (response.isSuccessful()) {
+                    OfferApiResponse apiResponse = response.body();
+                    getProductFlashSale(apiResponse.getData().get(0).getId());
+//                    productByCatInterface.onProductSuccess(apiResponse);
+                }
+//                else
+//                    productByCatInterface.onFailure(_Context.getString(R.string.error)+"");
+                productByCatInterface.onProgressDialog(false);
+            }
+
+            @Override
+            public void onFailure(Call<OfferApiResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+//                productByCatInterface.onFailure(_Context.getString(R.string.error) + " " );
+                productByCatInterface.onProgressDialog(false);
+            }
+        });
+    }
+
+    public void getProductFlashSale( int parent) {
+        String lang= "ar";int userId = 0;
+        if (Paper.book().contains(Common.language))
+            lang = Paper.book().read(Common.language);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
+        productByCatInterface.onProgressDialog(true);
+        ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
+        Call<ProductApiResponse> call = apiInterface.getProductByOfferIdResponse(parent,userId,lang);
+        call.enqueue(new Callback<ProductApiResponse>() {
+            @Override
+            public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
+                if (response.isSuccessful()) {
+                    ProductApiResponse apiResponse = response.body();
+                    productByCatInterface.onProductSuccess(apiResponse);
+                }
+//                else
+//                    productByCatInterface.onFailure(_Context.getString(R.string.error)+"");
+                productByCatInterface.onProgressDialog(false);
+            }
+
+            @Override
+            public void onFailure(Call<ProductApiResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+//                productByCatInterface.onFailure(_Context.getString(R.string.error) + " " );
+                productByCatInterface.onProgressDialog(false);
+            }
+        });
+    }
+
 
     public void getProductFavorite(AddFavoriteBody addFavoriteBody) {
         String lang= "ar";

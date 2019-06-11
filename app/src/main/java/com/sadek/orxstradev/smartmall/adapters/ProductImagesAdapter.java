@@ -50,7 +50,7 @@ public class ProductImagesAdapter extends RecyclerView.Adapter<ProductImagesAdap
 
 
         if (mContext != null)
-            Picasso.with(mContext).load(Common.BASE_IMAGE_URL+contents.get(position)).into(holder.image);
+            Picasso.with(mContext).load(Common.BASE_IMAGE_URL2+contents.get(position)).into(holder.image);
         holder.image.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
 

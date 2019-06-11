@@ -46,6 +46,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
 
         holder.categoryTextView.setText(categoryList.get(position).getTitle());
 
+        Picasso.with(context).load(Common.BASE_IMAGE_URL+categoryList.get(position).getMobileIcon()).error(R.drawable.unpaid).into(holder.category_image);
         OfferByCatPresenter offerByCatPresenter = new OfferByCatPresenter(context, this);
         offerByCatPresenter.getOffer(position, holder, categoryList.get(position).getId());
 
@@ -132,6 +133,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
     }
 
     public class OrdersVh extends RecyclerView.ViewHolder {
+        private ImageView category_image;
 
         private TextView categoryTextView, home_cat_offer1_txt1, home_cat_offer2_txt1, home_cat_offer3_txt1,
                 home_cat_offer1_txt2, home_cat_offer2_txt2, home_cat_offer3_txt2;
@@ -139,6 +141,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
 
         public OrdersVh(View itemView) {
             super(itemView);
+            category_image = itemView.findViewById(R.id.category_img);
             categoryTextView = itemView.findViewById(R.id.home_cat_txt);
             home_cat_offer_img = itemView.findViewById(R.id.home_cat_offer_img);
             home_cat_offer1_img = itemView.findViewById(R.id.home_cat_offer1_img);

@@ -79,7 +79,7 @@ public class HomeProductAdapter extends RecyclerView.Adapter<HomeProductAdapter.
             });
         } else {
 
-            Picasso.with(context).load(Common.BASE_IMAGE_URL+productList.get(position).getImage1()).error(R.drawable.logo).into(holder.home_product_img);
+            Picasso.with(context).load(Common.BASE_IMAGE_URL2+productList.get(position).getImage1().get(0)).error(R.drawable.logo).into(holder.home_product_img);
             holder.home_product_price_txt.setText(productList.get(position).getPrice());
             holder.home_product_name_txt.setText(productList.get(position).getName());
 

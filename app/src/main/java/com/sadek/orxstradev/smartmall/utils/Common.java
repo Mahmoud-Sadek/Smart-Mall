@@ -21,7 +21,9 @@ public class Common {
     public static final String FIRIST_TIME = "firstTime";
 
     public static final String BASE_IMAGE_URL = "http://smartmall-sa.com/dashboard/storage/app/";
+    public static final String BASE_IMAGE_URL2 = "http://smartmall-sa.com/dashboard/storage/app/images/";
     public static String CURRENT_USSER ;
+    public static final String api_token = "api_token";
 
 
     public static boolean isConnectedToInternet (Context context){

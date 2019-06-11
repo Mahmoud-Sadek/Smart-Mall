@@ -8,6 +8,7 @@ import com.sadek.orxstradev.smartmall.interfaces.LoginInterface;
 import com.sadek.orxstradev.smartmall.interfaces.SignupInterface;
 import com.sadek.orxstradev.smartmall.model.body.LoginBody;
 import com.sadek.orxstradev.smartmall.model.body.SignupBody;
+import com.sadek.orxstradev.smartmall.model.body.SocialLoginBody;
 import com.sadek.orxstradev.smartmall.model.response.LoginResponse;
 import com.sadek.orxstradev.smartmall.model.response.SignupResponse;
 import com.sadek.orxstradev.smartmall.service.ApiService;
@@ -60,4 +61,31 @@ public class SignupPresenter {
         });
     }
 
+    public void loginSocial(SignupBody loginBody) {
+        String lang= "ar";
+        if (Paper.book().contains(Common.language))
+            lang = Paper.book().read(Common.language);
+        signupInterface.onProgressDialog(true);
+        ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
+        Call<SocialLoginBody> call = apiInterface.getLoginSocialResponse(loginBody);
+        call.enqueue(new Callback<SocialLoginBody>() {
+            @Override
+            public void onResponse(Call<SocialLoginBody> call, Response<SocialLoginBody> response) {
+                if (response.isSuccessful()) {
+                    SocialLoginBody loginResponse = response.body();
+                    signupInterface.onLoginSuccess(loginResponse);
+                } else
+                    signupInterface.onFailure(_Context.getString(R.string.error)+"");
+                signupInterface.onProgressDialog(false);
+            }
+
+            @Override
+            public void onFailure(Call<SocialLoginBody> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+                signupInterface.onFailure(_Context.getString(R.string.error) + " " );
+                signupInterface.onProgressDialog(false);
+            }
+        });
+    }
 }

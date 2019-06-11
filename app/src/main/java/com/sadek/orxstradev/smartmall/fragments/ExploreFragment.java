@@ -1,5 +1,6 @@
 package com.sadek.orxstradev.smartmall.fragments;
 
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,16 +30,21 @@ import com.sadek.orxstradev.smartmall.adapters.CheckOutAdapter;
 import com.sadek.orxstradev.smartmall.adapters.ExploreOfferAdapter;
 import com.sadek.orxstradev.smartmall.adapters.FavoriteAdapter;
 import com.sadek.orxstradev.smartmall.adapters.FlashSaleProductAdapter;
+import com.sadek.orxstradev.smartmall.adapters.HomeAdsAdapter;
 import com.sadek.orxstradev.smartmall.adapters.HomeCategoryAdapter;
 import com.sadek.orxstradev.smartmall.adapters.OffersAdapter;
+import com.sadek.orxstradev.smartmall.interfaces.AdsInterface;
 import com.sadek.orxstradev.smartmall.interfaces.CategoryByParentInterface;
 import com.sadek.orxstradev.smartmall.interfaces.CategoryInterface;
 import com.sadek.orxstradev.smartmall.interfaces.OfferInterface;
 import com.sadek.orxstradev.smartmall.interfaces.ProductByCatInterface;
+import com.sadek.orxstradev.smartmall.model.response.AdsApiResponse;
+import com.sadek.orxstradev.smartmall.model.response.AdsRandomApiResponse;
 import com.sadek.orxstradev.smartmall.model.response.CartModel;
 import com.sadek.orxstradev.smartmall.model.response.CategoryApiResponse;
 import com.sadek.orxstradev.smartmall.model.response.OfferApiResponse;
 import com.sadek.orxstradev.smartmall.model.response.ProductApiResponse;
+import com.sadek.orxstradev.smartmall.presenters.AdsPresenter;
 import com.sadek.orxstradev.smartmall.presenters.CategoryByParentPresenter;
 import com.sadek.orxstradev.smartmall.presenters.CategoryPresenter;
 import com.sadek.orxstradev.smartmall.presenters.OfferPresenter;
@@ -54,14 +60,15 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class ExploreFragment extends Fragment implements  CategoryByParentInterface, ProductByCatInterface {
+public class ExploreFragment extends Fragment implements AdsInterface, ProductByCatInterface {
 
 
     List<ProductApiResponse.DataEntity> produstsList;
     FlashSaleProductAdapter flashSaleProductAdapter;
 
-    List<CategoryApiResponse.DataEntity> categorysList;
-    HomeCategoryAdapter homeCategoryAdapter;
+
+    List<AdsApiResponse.DataBean> dataAds;
+    HomeAdsAdapter homeAdsAdapter;
     Unbinder unbinder;
 
     @BindView(R.id.home_rcy)
@@ -71,7 +78,7 @@ public class ExploreFragment extends Fragment implements  CategoryByParentInterf
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    CategoryByParentPresenter categoryByParentPresenter;
+    AdsPresenter adsPresenter;
     ProductPresenter productPresenter;
 
 
@@ -100,7 +107,7 @@ public class ExploreFragment extends Fragment implements  CategoryByParentInterf
         unbinder = ButterKnife.bind(this, view);
 
 
-        categoryByParentPresenter = new CategoryByParentPresenter(getContext(), this);
+        adsPresenter = new AdsPresenter(getContext(), this);
         productPresenter = new ProductPresenter(getContext(), this);
         intUI();
         getData();
@@ -118,13 +125,12 @@ public class ExploreFragment extends Fragment implements  CategoryByParentInterf
         flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(), produstsList);
         home_product_rcy.setAdapter(flashSaleProductAdapter);
 
+
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler_home.setLayoutManager(layoutManager);
-        categorysList = new ArrayList<>();
-        homeCategoryAdapter = new HomeCategoryAdapter(getContext(), categorysList);
-        recycler_home.setAdapter(homeCategoryAdapter);
-
-
+        dataAds = new ArrayList<>();
+        homeAdsAdapter = new HomeAdsAdapter(getContext(), dataAds);
+        recycler_home.setAdapter(homeAdsAdapter);
 
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
@@ -150,8 +156,8 @@ public class ExploreFragment extends Fragment implements  CategoryByParentInterf
     private void getData() {
 
         swipeRefreshLayout.setRefreshing(true);
-        categoryByParentPresenter.getCategory(0);
-        productPresenter.getProduct();
+        adsPresenter.getAds();
+        productPresenter.getFlashSale();
     }
 
 
@@ -162,22 +168,21 @@ public class ExploreFragment extends Fragment implements  CategoryByParentInterf
         // unbind the view to free some memory
         unbinder.unbind();
     }
-
-
     @Override
-    public void onCategoryByParentSuccess(CategoryApiResponse categoryApiResponse) {
-        categorysList.clear();
-        if (categorysList != null)
-            categorysList.addAll(categoryApiResponse.getData());
-        homeCategoryAdapter.notifyDataSetChanged();
+    public void onSuccess(AdsApiResponse adsApiResponse) {
+        dataAds.clear();
+        if (dataAds != null)
+            dataAds.addAll(adsApiResponse.getData());
+        homeAdsAdapter.notifyDataSetChanged();
         if (swipeRefreshLayout != null)
             swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onCategoryByParentSuccess(CategoryApiResponse categoryApiResponse, CategorySubAdapter.OrdersVh holder, int position) {
+    public void onSuccess(AdsRandomApiResponse adsApiResponse) {
 
     }
+
 
     @Override
     public void onProductByCatSuccess(ProductApiResponse productApiResponse, HomeCategoryAdapter.OrdersVh holder, int postion) {

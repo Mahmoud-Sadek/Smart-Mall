@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +19,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.sadek.orxstradev.smartmall.R;
 import com.sadek.orxstradev.smartmall.activites.ProductSearchActivity;
+import com.sadek.orxstradev.smartmall.activites.WebViewActivity;
 import com.sadek.orxstradev.smartmall.adapters.CartAdapter;
 import com.sadek.orxstradev.smartmall.adapters.CategoryHomeAdapter;
 import com.sadek.orxstradev.smartmall.adapters.CategorySubAdapter;
@@ -29,22 +32,28 @@ import com.sadek.orxstradev.smartmall.adapters.CheckOutAdapter;
 import com.sadek.orxstradev.smartmall.adapters.ExploreOfferAdapter;
 import com.sadek.orxstradev.smartmall.adapters.FavoriteAdapter;
 import com.sadek.orxstradev.smartmall.adapters.FlashSaleProductAdapter;
+import com.sadek.orxstradev.smartmall.adapters.HomeAdsAdapter;
 import com.sadek.orxstradev.smartmall.adapters.HomeCategoryAdapter;
 import com.sadek.orxstradev.smartmall.adapters.OffersAdapter;
+import com.sadek.orxstradev.smartmall.interfaces.AdsInterface;
 import com.sadek.orxstradev.smartmall.interfaces.CategoryByParentInterface;
 import com.sadek.orxstradev.smartmall.interfaces.CategoryInterface;
 import com.sadek.orxstradev.smartmall.interfaces.OfferInterface;
 import com.sadek.orxstradev.smartmall.interfaces.ProductByCatInterface;
+import com.sadek.orxstradev.smartmall.model.response.AdsApiResponse;
+import com.sadek.orxstradev.smartmall.model.response.AdsRandomApiResponse;
 import com.sadek.orxstradev.smartmall.model.response.CartModel;
 import com.sadek.orxstradev.smartmall.model.response.CategoryApiResponse;
 import com.sadek.orxstradev.smartmall.model.response.OfferApiResponse;
 import com.sadek.orxstradev.smartmall.model.response.ProductApiResponse;
+import com.sadek.orxstradev.smartmall.presenters.AdsPresenter;
 import com.sadek.orxstradev.smartmall.presenters.CategoryByParentPresenter;
 import com.sadek.orxstradev.smartmall.presenters.CategoryPresenter;
 import com.sadek.orxstradev.smartmall.presenters.OfferPresenter;
 import com.sadek.orxstradev.smartmall.presenters.ProductPresenter;
 import com.sadek.orxstradev.smartmall.utils.Common;
 import com.sadek.orxstradev.smartmall.view.CircleIndicator2;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +63,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class HomeFragment extends Fragment implements CategoryInterface, OfferInterface, CategoryByParentInterface, ProductByCatInterface {
+public class HomeFragment extends Fragment implements CategoryInterface, OfferInterface, ProductByCatInterface, AdsInterface {
 
-    List<CategoryApiResponse.DataEntity> categorysList;
-    HomeCategoryAdapter homeCategoryAdapter;
+//    List<CategoryApiResponse.DataEntity> categorysList;
+//    HomeCategoryAdapter homeCategoryAdapter;
 
     List<ProductApiResponse.DataEntity> produstsList;
     FlashSaleProductAdapter flashSaleProductAdapter;
@@ -86,11 +95,13 @@ public class HomeFragment extends Fragment implements CategoryInterface, OfferIn
     CircleIndicator2 indicator;
     OffersAdapter adapterOffer;
     List<OfferApiResponse.DataEntity> dataOffers;
-
+    List<AdsApiResponse.DataBean> dataAds;
+    HomeAdsAdapter homeAdsAdapter;
 
     CategoryPresenter categoryPresenter;
-    CategoryByParentPresenter categoryByParentPresenter;
+//    CategoryByParentPresenter categoryByParentPresenter;
     OfferPresenter offerPresenter;
+    AdsPresenter adsPresenter;
     ProductPresenter productPresenter;
 
     @Override
@@ -126,10 +137,12 @@ public class HomeFragment extends Fragment implements CategoryInterface, OfferIn
 
         categoryPresenter = new CategoryPresenter(getContext(), this);
         offerPresenter = new OfferPresenter(getContext(), this);
-        categoryByParentPresenter = new CategoryByParentPresenter(getContext(), this);
+        adsPresenter = new AdsPresenter(getContext(), this);
+//        categoryByParentPresenter = new CategoryByParentPresenter(getContext(), this);
         productPresenter = new ProductPresenter(getContext(), this);
         intUI();
         getData();
+        adsPresenter.getAdsRandom();
     }
 
     private void intUI() {
@@ -143,12 +156,19 @@ public class HomeFragment extends Fragment implements CategoryInterface, OfferIn
         produstsList = new ArrayList<>();
         flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(), produstsList);
         home_product_rcy.setAdapter(flashSaleProductAdapter);
-
+/*
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler_home.setLayoutManager(layoutManager);
         categorysList = new ArrayList<>();
         homeCategoryAdapter = new HomeCategoryAdapter(getContext(), categorysList);
         recycler_home.setAdapter(homeCategoryAdapter);
+        */
+
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recycler_home.setLayoutManager(layoutManager);
+        dataAds = new ArrayList<>();
+        homeAdsAdapter = new HomeAdsAdapter(getContext(), dataAds);
+        recycler_home.setAdapter(homeAdsAdapter);
 
 
         final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -209,8 +229,9 @@ public class HomeFragment extends Fragment implements CategoryInterface, OfferIn
         swipeRefreshLayout.setRefreshing(true);
         categoryPresenter.getCategory(0);
         offerPresenter.getOffer();
-        categoryByParentPresenter.getCategory(0);
-        productPresenter.getProduct();
+        adsPresenter.getAds();
+//        categoryByParentPresenter.getCategory(0);
+        productPresenter.getFlashSale();
     }
 
 
@@ -272,21 +293,6 @@ public class HomeFragment extends Fragment implements CategoryInterface, OfferIn
 
 
     @Override
-    public void onCategoryByParentSuccess(CategoryApiResponse categoryApiResponse) {
-        categorysList.clear();
-        if (categorysList != null)
-            categorysList.addAll(categoryApiResponse.getData());
-        homeCategoryAdapter.notifyDataSetChanged();
-        if (swipeRefreshLayout != null)
-            swipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onCategoryByParentSuccess(CategoryApiResponse categoryApiResponse, CategorySubAdapter.OrdersVh holder, int position) {
-
-    }
-
-    @Override
     public void onProductByCatSuccess(ProductApiResponse productApiResponse, HomeCategoryAdapter.OrdersVh holder, int postion) {
 
     }
@@ -319,6 +325,37 @@ public class HomeFragment extends Fragment implements CategoryInterface, OfferIn
         flashSaleProductAdapter.notifyDataSetChanged();
         if (swipeRefreshLayout != null)
             swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onSuccess(AdsApiResponse adsApiResponse) {
+        dataAds.clear();
+        if (dataAds != null)
+            dataAds.addAll(adsApiResponse.getData());
+        homeAdsAdapter.notifyDataSetChanged();
+        if (swipeRefreshLayout != null)
+            swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onSuccess(final AdsRandomApiResponse adsApiResponse) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getLayoutInflater();
+        View viewImg = inflater.inflate(R.layout.image_dilog, null);
+        builder.setView(viewImg);
+        ImageView imgView = (ImageView) viewImg.findViewById(R.id.imageView);
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent urlIntent = new Intent(getActivity(),WebViewActivity.class);
+                urlIntent.putExtra("url",adsApiResponse.getData().get(adsApiResponse.getData().size()-1).getLink());
+                startActivity(urlIntent);
+            }
+        });
+        Picasso.with(getContext()).load(Common.BASE_IMAGE_URL+adsApiResponse.getData().get(adsApiResponse.getData().size()-1).getImage()).into(imgView);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     @Override

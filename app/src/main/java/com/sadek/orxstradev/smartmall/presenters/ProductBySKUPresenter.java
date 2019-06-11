@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sadek.orxstradev.smartmall.R;
-import com.sadek.orxstradev.smartmall.adapters.ExploreOfferAdapter;
+import com.sadek.orxstradev.smartmall.adapters.CheckOutAdapter;
 import com.sadek.orxstradev.smartmall.interfaces.ProductByCatInterface;
 import com.sadek.orxstradev.smartmall.model.response.ProductApiResponse;
 import com.sadek.orxstradev.smartmall.service.ApiService;
@@ -34,17 +34,20 @@ public class ProductBySKUPresenter {
 
     public void getProduct(int parent) {
         String lang= "ar";
+        int userId = 0;
         if (Paper.book().contains(Common.language))
             lang = Paper.book().read(Common.language);
+        if (Paper.book().contains(Common.token))
+            userId = new Integer(Paper.book().read(Common.token).toString());
         productByCatInterface.onProgressDialog(true);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<ProductApiResponse> call = apiInterface.getProductBySKUResponse(parent, lang);
+        Call<ProductApiResponse> call = apiInterface.getProductBySKUResponse(parent,userId, lang);
         call.enqueue(new Callback<ProductApiResponse>() {
             @Override
             public void onResponse(Call<ProductApiResponse> call, Response<ProductApiResponse> response) {
                 if (response.isSuccessful()) {
                     ProductApiResponse apiResponse = response.body();
-                    productByCatInterface.onProductByOfferSuccess(apiResponse, new ExploreOfferAdapter.OrdersVh(null), 0);
+                    productByCatInterface.onProductSuccess(apiResponse);
                 }
 //                else
 //                    productByCatInterface.onFailure(_Context.getString(R.string.error)+"");

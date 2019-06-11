@@ -10,12 +10,17 @@ import android.widget.Toast;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.sadek.orxstradev.smartmall.BaseActitvty;
 import com.sadek.orxstradev.smartmall.R;
+import com.sadek.orxstradev.smartmall.dialogs.EditEmailDialog;
 import com.sadek.orxstradev.smartmall.dialogs.EditProfileDialog;
 import com.sadek.orxstradev.smartmall.dialogs.LanguageDialog;
 import com.sadek.orxstradev.smartmall.fragments.ProfileFragment;
 import com.sadek.orxstradev.smartmall.interfaces.AddFavoriteInterface;
+import com.sadek.orxstradev.smartmall.interfaces.SuccessInterface;
 import com.sadek.orxstradev.smartmall.model.body.ChangeNameBody;
+import com.sadek.orxstradev.smartmall.model.body.LoginBody;
 import com.sadek.orxstradev.smartmall.model.response.DateResponse;
+import com.sadek.orxstradev.smartmall.model.response.SuccessResponse;
+import com.sadek.orxstradev.smartmall.presenters.ChangeEmailPresenter;
 import com.sadek.orxstradev.smartmall.presenters.ChangeNamePresenter;
 import com.sadek.orxstradev.smartmall.utils.Common;
 import com.sadek.orxstradev.smartmall.utils.LocaleUtils;
@@ -24,9 +29,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.paperdb.Paper;
 
-public class ProfileSettingActivity extends BaseActitvty implements AddFavoriteInterface {
+public class ProfileSettingActivity extends BaseActitvty implements AddFavoriteInterface, SuccessInterface {
 
     ChangeNamePresenter changeNamePresenter;
+    ChangeEmailPresenter changeEmailPresenter;
     public static KProgressHUD dialog = null;
 
     @Override
@@ -39,6 +45,7 @@ public class ProfileSettingActivity extends BaseActitvty implements AddFavoriteI
         dialog = new KProgressHUD(this);
 
         changeNamePresenter = new ChangeNamePresenter(this, this);
+        changeEmailPresenter = new ChangeEmailPresenter(this, this);
 
     }
 
@@ -48,6 +55,7 @@ public class ProfileSettingActivity extends BaseActitvty implements AddFavoriteI
     }
 
     EditProfileDialog changeNameDialog;
+    EditEmailDialog changeEmailDialog;
 
     @OnClick(R.id.change_name)
     public void change_nameClick(View view) {
@@ -70,13 +78,15 @@ public class ProfileSettingActivity extends BaseActitvty implements AddFavoriteI
     @OnClick(R.id.change_email)
     public void change_emailClick(View view) {
         if (Paper.book().read(Common.token) != null) {
-            changeNameDialog = new EditProfileDialog(this, ProfileFragment.profileResponse.getData().get(0).getEmail(), new EditProfileDialog.useCouponAction() {
+
+            changeEmailDialog = new EditEmailDialog(this, ProfileFragment.profileResponse.getData().get(0).getEmail(), new EditEmailDialog.useCouponAction() {
+
 
                 @Override
-                public void onGetCouponCode(String code) {
-                    changeNameDialog.dismiss();
-                    changeNamePresenter.changeName(new ChangeNameBody(Paper.book().read(Common.token).toString(), ProfileFragment.profileResponse.getData().get(0).getFullname(),code ));
+                public void onGetCouponCode(String email, String password) {
 
+                    changeNameDialog.dismiss();
+                    changeEmailPresenter.changeEmail(new LoginBody(email,password ));
                 }
             });
             changeNameDialog.show();
@@ -137,6 +147,11 @@ public class ProfileSettingActivity extends BaseActitvty implements AddFavoriteI
     @Override
     public void onSuccess(DateResponse dateResponse) {
         Toast.makeText(this, getString(R.string.done), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSuccess(SuccessResponse successResponse) {
+
     }
 
     @Override

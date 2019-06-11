@@ -56,7 +56,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.OrdersVh
         holder.address_country_txt.setText(addressList.get(position).getCountry()+"");
         holder.address_city_txt.setText(addressList.get(position).getCity()+"");
         holder.address_street_txt.setText(addressList.get(position).getStreet()+"");
-        holder.address_mobile_txt.setText(addressList.get(position).getMobileNumber1()+"");
+        holder.address_mobile_txt.setText(addressList.get(position).getPhone()+"");
 
     }
 

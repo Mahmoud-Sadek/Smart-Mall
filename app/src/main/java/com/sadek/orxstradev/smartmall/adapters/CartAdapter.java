@@ -91,7 +91,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.OrdersVh> impl
             holder.cart_name_txt.setText(productApiResponse.getData().get(0).getName() + "");
             holder.cart_desc_txt.setText(productApiResponse.getData().get(0).getInfromation() + "");
             holder.cart_price_txt.setText(productApiResponse.getData().get(0).getPrice() + " " + context.getString(R.string.currency));
-            Picasso.with(context).load(Common.BASE_IMAGE_URL + productApiResponse.getData().get(0).getImage1()).error(R.drawable.logo).into(holder.cart_img);
+            Picasso.with(context).load(Common.BASE_IMAGE_URL2 + productApiResponse.getData().get(0).getImage1().get(0)).error(R.drawable.logo).into(holder.cart_img);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

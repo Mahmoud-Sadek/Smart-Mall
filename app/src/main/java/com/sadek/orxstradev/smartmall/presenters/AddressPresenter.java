@@ -10,6 +10,7 @@ import com.sadek.orxstradev.smartmall.model.body.AddCartBody;
 import com.sadek.orxstradev.smartmall.model.response.AddressModel;
 import com.sadek.orxstradev.smartmall.model.response.DateResponse;
 import com.sadek.orxstradev.smartmall.service.ApiService;
+import com.sadek.orxstradev.smartmall.utils.Common;
 
 import io.paperdb.Paper;
 import retrofit2.Call;
@@ -23,7 +24,6 @@ public class AddressPresenter {
     AddressInterface addressInterface;
 
     ApiService apiService;
-    AddFavoriteInterface addFavoriteInterface;
     public AddressPresenter(Context _Context, AddressInterface addressInterface) {
         this._Context = _Context;
         this.addressInterface = addressInterface;
@@ -32,14 +32,7 @@ public class AddressPresenter {
         apiService = new ApiService();
 
     }
-    public AddressPresenter(Context _Context, AddFavoriteInterface addFavoriteInterface) {
-        this._Context = _Context;
-        this.addFavoriteInterface = addFavoriteInterface;
 
-        Paper.init(_Context);
-        apiService = new ApiService();
-
-    }
 
     public void getAddress(int userId) {
         addressInterface.onProgressDialog(true);
@@ -67,26 +60,28 @@ public class AddressPresenter {
     }
 
     public void addAddress(AddressModel.DataEntity addressModel) {
-        addFavoriteInterface.onProgressDialog(true);
+        addressInterface.onProgressDialog(true);
+
+        String api_token = "Bearer "+Paper.book().read(Common.api_token);
         ApiService.ApiInterface apiInterface = apiService.getClient().create(ApiService.ApiInterface.class);
-        Call<DateResponse> call = apiInterface.addAddressApiResponse(addressModel);
-        call.enqueue(new Callback<DateResponse>() {
+        Call<AddressModel> call = apiInterface.getCreateAddresseApiResponse(addressModel, api_token);
+        call.enqueue(new Callback<AddressModel>() {
             @Override
-            public void onResponse(Call<DateResponse> call, Response<DateResponse> response) {
+            public void onResponse(Call<AddressModel> call, Response<AddressModel> response) {
                 if (response.isSuccessful()) {
-                    DateResponse apiResponse = response.body();
-                    addFavoriteInterface.onSuccess(apiResponse);
+                    AddressModel apiResponse = response.body();
+                    addressInterface.onSuccess(apiResponse);
                 } else
-                    addFavoriteInterface.onFailure(_Context.getString(R.string.error)+"");
-                addFavoriteInterface.onProgressDialog(false);
+                    addressInterface.onFailure(_Context.getString(R.string.error)+"");
+                addressInterface.onProgressDialog(false);
             }
 
             @Override
-            public void onFailure(Call<DateResponse> call, Throwable t) {
+            public void onFailure(Call<AddressModel> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
-                addFavoriteInterface.onFailure(_Context.getString(R.string.error) + " " );
-                addFavoriteInterface.onProgressDialog(false);
+                addressInterface.onFailure(_Context.getString(R.string.error) + " " );
+                addressInterface.onProgressDialog(false);
             }
         });
     }

@@ -2,21 +2,29 @@ package com.sadek.orxstradev.smartmall.model.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sadek.orxstradev.smartmall.model.body.OptionModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductApiResponse {
-
-
+    @Expose
+    @SerializedName("data")
+    private List<DataEntity> data;
     @Expose
     @SerializedName("message")
     private String message;
     @Expose
     @SerializedName("status")
     private String status;
-    @Expose
-    @SerializedName("data")
-    private List<DataEntity> data;
+
+    public List<DataEntity> getData() {
+        return data;
+    }
+
+    public void setData(List<DataEntity> data) {
+        this.data = data;
+    }
 
     public String getMessage() {
         return message;
@@ -34,18 +42,16 @@ public class ProductApiResponse {
         this.status = status;
     }
 
-    public List<DataEntity> getData() {
-        return data;
-    }
-
-    public void setData(List<DataEntity> data) {
-        this.data = data;
-    }
-
     public class DataEntity {
         @Expose
-        @SerializedName("time")
-        private String time;
+        @SerializedName("updated_at")
+        private UpdatedAtEntity updatedAt;
+        @Expose
+        @SerializedName("created_at")
+        private CreatedAtEntity createdAt;
+        @Expose
+        @SerializedName("is_like")
+        private boolean isLike;
         @Expose
         @SerializedName("brand_id")
         private String brandId;
@@ -63,16 +69,13 @@ public class ProductApiResponse {
         private String links;
         @Expose
         @SerializedName("discount")
-        private String discount;
+        private int discount;
         @Expose
         @SerializedName("freeshing")
         private String freeshing;
         @Expose
         @SerializedName("detail")
         private String detail;
-        @Expose
-        @SerializedName("sku")
-        private String sku;
         @Expose
         @SerializedName("likes")
         private String likes;
@@ -86,20 +89,8 @@ public class ProductApiResponse {
         @SerializedName("quantity")
         private String quantity;
         @Expose
-        @SerializedName("image5")
-        private String image5;
-        @Expose
-        @SerializedName("image4")
-        private String image4;
-        @Expose
-        @SerializedName("image3")
-        private String image3;
-        @Expose
-        @SerializedName("image2")
-        private String image2;
-        @Expose
         @SerializedName("image1")
-        private String image1;
+        private List<String> image1;
         @Expose
         @SerializedName("offer_price")
         private String offerPrice;
@@ -112,13 +103,41 @@ public class ProductApiResponse {
         @Expose
         @SerializedName("id")
         private int id;
+        @Expose
+        @SerializedName("sku")
+        private String sku;
+        @Expose
+        @SerializedName("colors")
+        private String colors;
+        @Expose
+        @SerializedName("size")
+        private String size;
+        @Expose
+        @SerializedName("volume")
+        private String volume;
 
-        public String getTime() {
-            return time;
+        public UpdatedAtEntity getUpdatedAt() {
+            return updatedAt;
         }
 
-        public void setTime(String time) {
-            this.time = time;
+        public void setUpdatedAt(UpdatedAtEntity updatedAt) {
+            this.updatedAt = updatedAt;
+        }
+
+        public CreatedAtEntity getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(CreatedAtEntity createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public boolean getIsLike() {
+            return isLike;
+        }
+
+        public void setIsLike(boolean isLike) {
+            this.isLike = isLike;
         }
 
         public String getBrandId() {
@@ -161,11 +180,11 @@ public class ProductApiResponse {
             this.links = links;
         }
 
-        public String getDiscount() {
+        public int getDiscount() {
             return discount;
         }
 
-        public void setDiscount(String discount) {
+        public void setDiscount(int discount) {
             this.discount = discount;
         }
 
@@ -183,22 +202,6 @@ public class ProductApiResponse {
 
         public void setDetail(String detail) {
             this.detail = detail;
-        }
-
-        public String getSku() {
-            return sku;
-        }
-
-        public void setSku(String sku) {
-            this.sku = sku;
-        }
-
-        public String getLikes() {
-            return likes;
-        }
-
-        public void setLikes(String likes) {
-            this.likes = likes;
         }
 
         public String getInfromation() {
@@ -225,43 +228,11 @@ public class ProductApiResponse {
             this.quantity = quantity;
         }
 
-        public String getImage5() {
-            return image5;
-        }
-
-        public void setImage5(String image5) {
-            this.image5 = image5;
-        }
-
-        public String getImage4() {
-            return image4;
-        }
-
-        public void setImage4(String image4) {
-            this.image4 = image4;
-        }
-
-        public String getImage3() {
-            return image3;
-        }
-
-        public void setImage3(String image3) {
-            this.image3 = image3;
-        }
-
-        public String getImage2() {
-            return image2;
-        }
-
-        public void setImage2(String image2) {
-            this.image2 = image2;
-        }
-
-        public String getImage1() {
+        public List<String> getImage1() {
             return image1;
         }
 
-        public void setImage1(String image1) {
+        public void setImage1(List<String> image1) {
             this.image1 = image1;
         }
 
@@ -296,6 +267,75 @@ public class ProductApiResponse {
         public void setId(int id) {
             this.id = id;
         }
+
+        public String getLikes() {
+            return likes;
+        }
+
+        public void setLikes(String likes) {
+            this.likes = likes;
+        }
+
+        public String getSku() {
+            return sku;
+        }
+
+        public void setSku(String sku) {
+            this.sku = sku;
+        }
+
+        public List<OptionModel> getColors() {
+            if (size != null) {
+                String strMain = colors;
+                List<OptionModel> colorList = new ArrayList<>();
+                String[] arrSplit = strMain.split(",");
+                for (int i = 0; i < arrSplit.length; i++) {
+                    colorList.add(new OptionModel("#ffe5e7df", arrSplit[i]));
+                }
+                return colorList;
+            }
+            return null;
+        }
+
+        public void setColors(String colors) {
+            this.colors = colors;
+
+        }
+
+        public List<OptionModel> getSize() {
+            if (size != null) {
+                String strMain = size;
+                List<OptionModel> sizeList = new ArrayList<>();
+                String[] arrSplit = strMain.split(",");
+                for (int i = 0; i < arrSplit.length; i++) {
+                    sizeList.add(new OptionModel("#ffe5e7df", arrSplit[i]));
+                }
+                return sizeList;
+            }
+            return null;
+        }
+
+        public void setSize(String size) {
+            this.size = size;
+        }
+
+        public List<OptionModel> getVolume() {
+            if (volume != null) {
+                String strMain = volume;
+                List<OptionModel> volumeList = new ArrayList<>();
+                String[] arrSplit = strMain.split(",");
+                for (int i = 0; i < arrSplit.length; i++) {
+                    volumeList.add(new OptionModel("#ffe5e7df", arrSplit[i]));
+                }
+                return volumeList;
+            }
+            return null;
+        }
+
+        public void setVolume(String volume) {
+            this.volume = volume;
+        }
     }
+
 
 }

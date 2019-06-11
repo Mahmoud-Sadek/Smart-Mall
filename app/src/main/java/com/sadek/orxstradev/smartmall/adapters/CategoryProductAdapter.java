@@ -41,7 +41,7 @@ public class CategoryProductAdapter extends RecyclerView.Adapter<CategoryProduct
     public void onBindViewHolder(@NonNull OrdersVh holder, final int position) {
 //        BaseActitvty.animate(holder.itemView);
 
-        Picasso.with(context).load(Common.BASE_IMAGE_URL+productList.get(position).getImage1()).error(R.drawable.logo).into(holder.category_product_img);
+        Picasso.with(context).load(Common.BASE_IMAGE_URL+productList.get(position).getImage1().get(0)).error(R.drawable.logo).into(holder.category_product_img);
         holder.category_product_price_txt.setText(productList.get(position).getPrice());
         holder.category_product_name_txt.setText(productList.get(position).getName());
         holder.category_product_likes_txt.setText(productList.get(position).getLikes()+"");

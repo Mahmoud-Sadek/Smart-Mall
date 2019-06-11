@@ -3,73 +3,72 @@ package com.sadek.orxstradev.smartmall.model.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class AddressModel {
+public  class AddressModel {
 
 
-    @Expose
-    @SerializedName("message")
-    private String message;
-    @Expose
-    @SerializedName("status")
-    private String status;
     @Expose
     @SerializedName("data")
-    private List<DataEntity> data;
+    private DataEntity data;
+    @Expose
+    @SerializedName("success")
+    private boolean success;
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public List<DataEntity> getData() {
+    public DataEntity getData() {
         return data;
     }
 
-    public void setData(List<DataEntity> data) {
+    public void setData(DataEntity data) {
         this.data = data;
+    }
+
+    public boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public static class DataEntity {
         @Expose
-        @SerializedName("user_id")
-        private String userId;
+        @SerializedName("id")
+        private int id;
+        @Expose
+        @SerializedName("created_at")
+        private String createdAt;
+        @Expose
+        @SerializedName("active")
+        private String active;
+        @Expose
+        @SerializedName("postal_code")
+        private String postalCode;
+        @Expose
+        @SerializedName("shipping_note")
+        private String shippingNote;
         @Expose
         @SerializedName("whatsapp")
         private String whatsapp;
         @Expose
-        @SerializedName("shopping_note")
-        private String shoppingNote;
+        @SerializedName("alt_phone")
+        private String altPhone;
         @Expose
-        @SerializedName("mobile_number2")
-        private String mobileNumber2;
-        @Expose
-        @SerializedName("mobile_number1")
-        private String mobileNumber1;
+        @SerializedName("phone")
+        private String phone;
         @Expose
         @SerializedName("location_type")
         private String locationType;
         @Expose
-        @SerializedName("nearst_landman")
-        private String nearstLandman;
+        @SerializedName("landmark")
+        private String landmark;
         @Expose
-        @SerializedName("address_detail")
-        private String addressDetail;
+        @SerializedName("address")
+        private String address;
         @Expose
         @SerializedName("street")
         private String street;
+        @Expose
+        @SerializedName("district")
+        private String district;
         @Expose
         @SerializedName("city")
         private String city;
@@ -80,15 +79,50 @@ public class AddressModel {
         @SerializedName("country")
         private String country;
         @Expose
-        @SerializedName("id")
-        private int id;
+        @SerializedName("last_name")
+        private String lastName;
+        @Expose
+        @SerializedName("first_name")
+        private String firstName;
 
-        public String getUserId() {
-            return userId;
+        public int getId() {
+            return id;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public String getActive() {
+            return active;
+        }
+
+        public void setActive(String active) {
+            this.active = active;
+        }
+
+        public String getPostalCode() {
+            return postalCode;
+        }
+
+        public void setPostalCode(String postalCode) {
+            this.postalCode = postalCode;
+        }
+
+        public String getShippingNote() {
+            return shippingNote;
+        }
+
+        public void setShippingNote(String shippingNote) {
+            this.shippingNote = shippingNote;
         }
 
         public String getWhatsapp() {
@@ -99,28 +133,20 @@ public class AddressModel {
             this.whatsapp = whatsapp;
         }
 
-        public String getShoppingNote() {
-            return shoppingNote;
+        public String getAltPhone() {
+            return altPhone;
         }
 
-        public void setShoppingNote(String shoppingNote) {
-            this.shoppingNote = shoppingNote;
+        public void setAltPhone(String altPhone) {
+            this.altPhone = altPhone;
         }
 
-        public String getMobileNumber2() {
-            return mobileNumber2;
+        public String getPhone() {
+            return phone;
         }
 
-        public void setMobileNumber2(String mobileNumber2) {
-            this.mobileNumber2 = mobileNumber2;
-        }
-
-        public String getMobileNumber1() {
-            return mobileNumber1;
-        }
-
-        public void setMobileNumber1(String mobileNumber1) {
-            this.mobileNumber1 = mobileNumber1;
+        public void setPhone(String phone) {
+            this.phone = phone;
         }
 
         public String getLocationType() {
@@ -131,20 +157,20 @@ public class AddressModel {
             this.locationType = locationType;
         }
 
-        public String getNearstLandman() {
-            return nearstLandman;
+        public String getLandmark() {
+            return landmark;
         }
 
-        public void setNearstLandman(String nearstLandman) {
-            this.nearstLandman = nearstLandman;
+        public void setLandmark(String landmark) {
+            this.landmark = landmark;
         }
 
-        public String getAddressDetail() {
-            return addressDetail;
+        public String getAddress() {
+            return address;
         }
 
-        public void setAddressDetail(String addressDetail) {
-            this.addressDetail = addressDetail;
+        public void setAddress(String address) {
+            this.address = address;
         }
 
         public String getStreet() {
@@ -153,6 +179,14 @@ public class AddressModel {
 
         public void setStreet(String street) {
             this.street = street;
+        }
+
+        public String getDistrict() {
+            return district;
+        }
+
+        public void setDistrict(String district) {
+            this.district = district;
         }
 
         public String getCity() {
@@ -179,12 +213,20 @@ public class AddressModel {
             this.country = country;
         }
 
-        public int getId() {
-            return id;
+        public String getLastName() {
+            return lastName;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
         }
     }
 

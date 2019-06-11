@@ -39,7 +39,7 @@ public class FlashSaleProductAdapter extends RecyclerView.Adapter<FlashSaleProdu
 
     @Override
     public void onBindViewHolder(@NonNull OrdersVh holder, final int position) {
-        Picasso.with(context).load(Common.BASE_IMAGE_URL + productList.get(position).getImage1()).error(R.drawable.logo).into(holder.home_product_img);
+        Picasso.with(context).load(Common.BASE_IMAGE_URL2 + productList.get(position).getImage1().get(0)).error(R.drawable.logo).into(holder.home_product_img);
         holder.home_product_price_txt.setText(productList.get(position).getOfferPrice() != null ? productList.get(position).getOfferPrice() :
                 productList.get(position).getPrice() + context.getString(R.string.currency));
 
